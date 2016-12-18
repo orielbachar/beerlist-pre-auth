@@ -35,12 +35,21 @@ app.get('/beers', function (req, res) {
 
 // Desirialize
 
-passport.deserializeUser(function (user, done) {
+passport.serializeUser(function (user, done) {
+  user = {
+    username: user.username,
+    _id: user._id
+  };
+
   done(null, user);
 });
 
-// User Sirialize
-passport.serializeUser(function (user, done) {
+passport.deserializeUser(function (user, done) {
+  user = {
+    username: user.username,
+    _id: user._id
+  };
+
   done(null, user);
 });
 
@@ -93,6 +102,41 @@ app.get('/currentUser', function (req, res) {
 app.post('/register', passport.authenticate('register'), function(req, res){
   res.json(req.user);
 });
+
+
+// Login authenticate
+//Passport for login
+
+app.post('/login', passport.authenticate('login'), function(req, res){
+  res.json(req.user);
+});
+
+passport.use('login', new LocalStrategy(function (username, password, done) {
+  User.findOne({ 'username': username, 'password':password}, function (err, user) {
+     // In case of any error return
+     if (err) {
+       console.log('Error in SignUp: ' + err);
+       return done(err);
+     }
+
+     // already exists
+     if (user) {
+
+       console.log('User Registration successful');
+       return done(null, user);
+
+     } else {
+      return done(null, false);
+
+       };
+     })
+   }));
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 
 
 app.post('/beers', function (req, res, next) {
