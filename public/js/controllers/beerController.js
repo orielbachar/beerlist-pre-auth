@@ -7,7 +7,7 @@ app.controller('BeersCtrl', ['$scope', 'beers', '$stateParams', function($scope,
     beers.addReview($scope.beer._id, {
       text: $scope.body,
       name: 'user',
-    }).success(function(review) {
+    }).then(function(review) {
       $scope.beer.reviews.push(review);
     });
 

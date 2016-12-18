@@ -12,14 +12,14 @@ app.factory('beers', ['$http', function ($http) {
   };
 
   beerService.create = function (beer) {
-    return $http.post('/beers', beer).success(function(data){
+    return $http.post('/beers', beer).then(function(data){
       console.log(data);
       beerService.beers.push(data);
     });
   };
 
   beerService.delete = function (beer) {
-    $http.delete('/beers/' + beer._id).success(function (data) {
+    $http.delete('/beers/' + beer._id).then(function (data) {
       for (var i = 0; i < beerService.beers.length; i += 1) {
         if (beerService.beers[i]._id === beer._id) {
           beerService.beers.splice(i, 1);
